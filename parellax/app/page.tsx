@@ -389,55 +389,145 @@ export default function Landing() {
             <h2 className="font-display text-4xl lg:text-5xl font-black mt-2">
               USE THE PRIMITIVES
             </h2>
+            <p className="font-body text-base text-neutral-600 mt-4 max-w-2xl">
+              The storage and compute layers are published as standalone npm packages.
+              Drop them into any Node.js or Next.js project that needs 0G KV or TEE inference —
+              no Parellax infrastructure required.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-ink">
-            {[
-              {
-                name: "@daiwikdomain/parellax-storage",
-                version: "0.1.1",
-                headline: "Decentralized KV for Any App",
-                description:
-                  "Drop-in wrapper for 0G KV Storage. Set per-wallet spending limits and maintain append-only audit logs that no operator can edit. Suitable for any agentic system that needs sovereign user preferences and tamper-proof history.",
-                exports: ["setSpendingLimit", "getSpendingLimit", "appendAuditLog", "getAuditLog"],
-                env: "PRIVATE_KEY",
-              },
-              {
-                name: "@daiwikdomain/parellax-compute",
-                version: "0.1.1",
-                headline: "TEE Inference in One Function",
-                description:
-                  "Single-call wrapper for 0G Compute TEE. Pass a natural-language intent and financial context — get back an approval decision with a cryptographic verification ID and a teeVerified flag confirming sealed enclave execution.",
-                exports: ["evaluateTransaction"],
-                env: "OG_COMPUTE_KEY",
-              },
-            ].map(({ name, version, headline, description, exports: fns, env }, i) => (
-              <div key={name} className={`p-8 ${i === 0 ? "border-b lg:border-b-0 lg:border-r border-ink" : ""}`}>
-                <div className="flex items-start justify-between mb-2">
-                  <span className="font-data text-xs text-editorial uppercase tracking-widest">npm</span>
-                  <span className="font-data text-xs text-neutral-500">v{version}</span>
+          {/* parellax-storage */}
+          <div className="border border-ink mb-0">
+            <div className="grid grid-cols-1 lg:grid-cols-2 border-b border-ink">
+              <div className="p-8 border-b lg:border-b-0 lg:border-r border-ink">
+                <div className="flex items-start justify-between mb-3">
+                  <span className="font-data text-xs text-editorial uppercase tracking-widest">npm · v0.1.1</span>
+                  <span className="font-data text-xs text-neutral-500">PRIVATE_KEY required</span>
                 </div>
-                <h3 className="font-display text-2xl lg:text-3xl font-bold mb-1 leading-tight">{headline}</h3>
-                <p className="font-data text-xs text-neutral-500 mb-4">{name}</p>
-                <p className="font-body text-sm text-neutral-600 leading-relaxed mb-6">{description}</p>
-
-                <div className="bg-neutral-950 border border-neutral-800 px-4 py-3 font-data text-xs text-neutral-300 mb-4">
-                  npm install {name}
-                </div>
-
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {fns.map(fn => (
-                    <span key={fn} className="border border-ink px-2 py-1 font-data text-xs text-neutral-500">
-                      {fn}()
-                    </span>
-                  ))}
-                </div>
-
-                <div className="font-data text-xs text-neutral-600">
-                  Requires <span className="text-neutral-400">{env}</span> env var
+                <h3 className="font-display text-3xl font-black mb-1">Decentralized KV</h3>
+                <p className="font-data text-xs text-neutral-500 mb-5">@daiwikdomain/parellax-storage</p>
+                <p className="font-body text-sm text-neutral-600 leading-relaxed mb-6">
+                  Drop-in wrapper for 0G KV Storage. Set per-wallet spending limits and maintain
+                  append-only audit logs stored on the 0G network — not in your database.
+                  No operator can modify entries after they are written.
+                </p>
+                <div className="bg-neutral-950 border border-neutral-800 px-4 py-3 font-data text-xs text-neutral-300">
+                  npm install @daiwikdomain/parellax-storage
                 </div>
               </div>
-            ))}
+
+              <div className="p-8">
+                <p className="font-data text-xs text-neutral-500 uppercase tracking-widest mb-4">AuditEntry type</p>
+                <div className="bg-neutral-950 border border-neutral-800 p-4 font-data text-xs text-neutral-300 space-y-0.5 leading-relaxed">
+                  <div><span className="text-neutral-500">interface</span> <span className="text-neutral-100">AuditEntry</span> {"{"}</div>
+                  <div className="pl-4"><span className="text-neutral-400">ts</span>{"             : number"}</div>
+                  <div className="pl-4"><span className="text-neutral-400">intent</span>{"        : string"}</div>
+                  <div className="pl-4"><span className="text-neutral-400">decision</span>{"      : "}<span className="text-editorial">'approved'</span>{" | "}<span className="text-editorial">'rejected'</span></div>
+                  <div className="pl-4"><span className="text-neutral-400">verificationId</span>{": string"}</div>
+                  <div className="pl-4"><span className="text-neutral-400">txHash</span>{"       ?: string"}</div>
+                  <div>{"}"}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 border-b border-ink">
+              <div className="p-8 border-b lg:border-b-0 lg:border-r border-ink">
+                <p className="font-data text-xs text-neutral-500 uppercase tracking-widest mb-4">Spending limits</p>
+                <div className="bg-neutral-950 border border-neutral-800 p-4 font-data text-xs text-neutral-300 space-y-1 leading-relaxed">
+                  <div><span className="text-neutral-500">import</span> {"{ setSpendingLimit, getSpendingLimit }"}</div>
+                  <div><span className="text-neutral-500">  from</span> <span className="text-editorial">'@daiwikdomain/parellax-storage'</span></div>
+                  <div className="pt-2"><span className="text-neutral-500">// write — returns txHash</span></div>
+                  <div><span className="text-neutral-500">const</span> tx = <span className="text-neutral-500">await</span> setSpendingLimit(</div>
+                  <div className="pl-4"><span className="text-editorial">'0xWallet'</span>,</div>
+                  <div className="pl-4">parseEther(<span className="text-editorial">'1.0'</span>)</div>
+                  <div>{")"}</div>
+                  <div className="pt-2"><span className="text-neutral-500">// read — returns bigint | null</span></div>
+                  <div><span className="text-neutral-500">const</span> limit = <span className="text-neutral-500">await</span> getSpendingLimit(<span className="text-editorial">'0xWallet'</span>)</div>
+                </div>
+              </div>
+
+              <div className="p-8">
+                <p className="font-data text-xs text-neutral-500 uppercase tracking-widest mb-4">Audit log</p>
+                <div className="bg-neutral-950 border border-neutral-800 p-4 font-data text-xs text-neutral-300 space-y-1 leading-relaxed">
+                  <div><span className="text-neutral-500">import</span> {"{ appendAuditLog, getAuditLog }"}</div>
+                  <div><span className="text-neutral-500">  from</span> <span className="text-editorial">'@daiwikdomain/parellax-storage'</span></div>
+                  <div className="pt-2"><span className="text-neutral-500">// append — fire and forget safe</span></div>
+                  <div><span className="text-neutral-500">await</span> appendAuditLog(<span className="text-editorial">'0xWallet'</span>, {"{"}</div>
+                  <div className="pl-4">ts: Date.now(), intent, decision: <span className="text-editorial">'approved'</span>,</div>
+                  <div className="pl-4">verificationId, txHash</div>
+                  <div>{"})"}</div>
+                  <div className="pt-2"><span className="text-neutral-500">// read full history</span></div>
+                  <div><span className="text-neutral-500">const</span> log = <span className="text-neutral-500">await</span> getAuditLog(<span className="text-editorial">'0xWallet'</span>)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* parellax-compute */}
+          <div className="border border-ink border-t-0">
+            <div className="grid grid-cols-1 lg:grid-cols-2 border-b border-ink">
+              <div className="p-8 border-b lg:border-b-0 lg:border-r border-ink">
+                <div className="flex items-start justify-between mb-3">
+                  <span className="font-data text-xs text-editorial uppercase tracking-widest">npm · v0.1.1</span>
+                  <span className="font-data text-xs text-neutral-500">OG_COMPUTE_KEY required</span>
+                </div>
+                <h3 className="font-display text-3xl font-black mb-1">TEE Inference</h3>
+                <p className="font-data text-xs text-neutral-500 mb-5">@daiwikdomain/parellax-compute</p>
+                <p className="font-body text-sm text-neutral-600 leading-relaxed mb-6">
+                  Single-function wrapper for 0G Compute TEE. Pass a natural-language intent and
+                  financial context — get back a structured approval decision with a cryptographic
+                  verification ID and a <span className="font-data">teeVerified</span> flag confirming
+                  the inference ran inside a sealed enclave.
+                </p>
+                <div className="bg-neutral-950 border border-neutral-800 px-4 py-3 font-data text-xs text-neutral-300">
+                  npm install @daiwikdomain/parellax-compute
+                </div>
+              </div>
+
+              <div className="p-8">
+                <p className="font-data text-xs text-neutral-500 uppercase tracking-widest mb-4">Return type</p>
+                <div className="bg-neutral-950 border border-neutral-800 p-4 font-data text-xs text-neutral-300 space-y-0.5 leading-relaxed">
+                  <div><span className="text-neutral-500">interface</span> <span className="text-neutral-100">ApprovalDecision</span> {"{"}</div>
+                  <div className="pl-4"><span className="text-neutral-400">approved</span>{"       : boolean"}</div>
+                  <div className="pl-4"><span className="text-neutral-400">reason</span>{"         : string"}</div>
+                  <div className="pl-4"><span className="text-neutral-400">model</span>{"          : string"}</div>
+                  <div className="pl-4"><span className="text-neutral-400">verificationId</span>{" : string"}<span className="text-neutral-600"> // TEE receipt</span></div>
+                  <div className="pl-4"><span className="text-neutral-400">teeVerified</span>{"    : boolean"}<span className="text-neutral-600"> // sealed enclave</span></div>
+                  <div>{"}"}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2">
+              <div className="p-8 border-b lg:border-b-0 lg:border-r border-ink">
+                <p className="font-data text-xs text-neutral-500 uppercase tracking-widest mb-4">Input type</p>
+                <div className="bg-neutral-950 border border-neutral-800 p-4 font-data text-xs text-neutral-300 space-y-0.5 leading-relaxed">
+                  <div><span className="text-neutral-500">interface</span> <span className="text-neutral-100">TransactionContext</span> {"{"}</div>
+                  <div className="pl-4"><span className="text-neutral-400">walletAddr</span>{"       : string"}</div>
+                  <div className="pl-4"><span className="text-neutral-400">amountWei</span>{"        : bigint"}</div>
+                  <div className="pl-4"><span className="text-neutral-400">recipient</span>{"        : string"}</div>
+                  <div className="pl-4"><span className="text-neutral-400">spendingLimitWei</span>{" : bigint"}</div>
+                  <div className="pl-4"><span className="text-neutral-400">currentBalanceWei</span>{": bigint"}</div>
+                  <div>{"}"}</div>
+                </div>
+              </div>
+
+              <div className="p-8">
+                <p className="font-data text-xs text-neutral-500 uppercase tracking-widest mb-4">Usage</p>
+                <div className="bg-neutral-950 border border-neutral-800 p-4 font-data text-xs text-neutral-300 space-y-1 leading-relaxed">
+                  <div><span className="text-neutral-500">import</span> {"{ evaluateTransaction }"}</div>
+                  <div><span className="text-neutral-500">  from</span> <span className="text-editorial">'@daiwikdomain/parellax-compute'</span></div>
+                  <div className="pt-2"><span className="text-neutral-500">const</span> decision = <span className="text-neutral-500">await</span> evaluateTransaction(</div>
+                  <div className="pl-4"><span className="text-editorial">'pay the nanny 0.1 OG'</span>,</div>
+                  <div className="pl-4">{"{ walletAddr, amountWei,"}</div>
+                  <div className="pl-6">{"recipient, spendingLimitWei,"}</div>
+                  <div className="pl-6">{"currentBalanceWei }"}</div>
+                  <div>{")"}</div>
+                  <div className="pt-2">decision.approved <span className="text-neutral-500">// true</span></div>
+                  <div>decision.teeVerified <span className="text-neutral-500">// true</span></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
