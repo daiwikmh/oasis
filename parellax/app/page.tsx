@@ -171,7 +171,7 @@ export default function Landing() {
                 ["0G Storage", "KV Audit Logs"],
                 ["0G Compute", "TEE-Sealed LLM"],
                 ["0G Chain", "ECDSA Vault"],
-                ["Llama 3.3 70B", "On-Device Inference"],
+                ["Qwen 2.5 7B", "TEE Inference"],
                 ["Chain ID 16602", "Galileo Testnet"],
                 ["Parellax", "v1.0"],
               ].map(([label, val]) => (
@@ -275,7 +275,7 @@ export default function Landing() {
                 fig: "Fig. 1.2",
                 points: [
                   "TEE-sealed inference",
-                  "Llama 3.3 70B model",
+                  "Qwen 2.5 7B model",
                   "Approval decisions are signed",
                   "Zero leakage by design",
                 ],
@@ -317,6 +317,125 @@ export default function Landing() {
                     </li>
                   ))}
                 </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Live on Testnet */}
+      <section className="border-b-4 border-ink bg-ink text-paper">
+        <div className="max-w-screen-xl mx-auto px-4 py-16">
+          <div className="border-b border-neutral-700 pb-4 mb-12">
+            <span className="font-data text-xs uppercase tracking-widest text-neutral-400">
+              Deployed
+            </span>
+            <h2 className="font-display text-4xl lg:text-5xl font-black mt-2">
+              LIVE ON TESTNET
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-neutral-700">
+            <div className="p-8 border-b lg:border-b-0 lg:border-r border-neutral-700 space-y-6">
+              <span className="font-data text-xs uppercase tracking-widest text-neutral-400 block">
+                Smart Contract
+              </span>
+              <div className="space-y-4">
+                {[
+                  { label: "ParellaxVault", value: "0x84e57567758B1143BD285eED2cbD574187a1D710" },
+                  { label: "verifiedBrain", value: "0x445bf5fe58f2Fe5009eD79cFB1005703D68cbF85" },
+                  { label: "Network", value: "0G Galileo Testnet — Chain ID 16602" },
+                  { label: "RPC", value: "https://evmrpc-testnet.0g.ai" },
+                  { label: "Solidity", value: "0.8.28 · cancun · viaIR" },
+                ].map(({ label, value }) => (
+                  <div key={label} className="flex items-start justify-between gap-6 border-b border-neutral-800 pb-3">
+                    <span className="font-data text-xs text-neutral-500 uppercase tracking-wider shrink-0">{label}</span>
+                    <span className="font-data text-xs text-neutral-300 text-right break-all">{value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-8 space-y-6">
+              <span className="font-data text-xs uppercase tracking-widest text-neutral-400 block">
+                0G Infrastructure
+              </span>
+              <div className="space-y-4">
+                {[
+                  { label: "Storage Indexer", value: "indexer-storage-testnet-turbo.0g.ai" },
+                  { label: "KV Stream", value: "ethers.id('parellax.v1')" },
+                  { label: "Flow Contract", value: "0x22E03a6A89B950F1c82ec5e74F8eCa321a105296" },
+                  { label: "Compute Router", value: "router-api-testnet.integratenetwork.work/v1" },
+                  { label: "TEE Model", value: "qwen/qwen-2.5-7b-instruct · verify_tee: true" },
+                ].map(({ label, value }) => (
+                  <div key={label} className="flex items-start justify-between gap-6 border-b border-neutral-800 pb-3">
+                    <span className="font-data text-xs text-neutral-500 uppercase tracking-wider shrink-0">{label}</span>
+                    <span className="font-data text-xs text-neutral-300 text-right break-all">{value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Open Source */}
+      <section className="border-b-4 border-ink">
+        <div className="max-w-screen-xl mx-auto px-4 py-16">
+          <div className="border-b border-ink pb-4 mb-12">
+            <span className="font-data text-xs uppercase tracking-widest text-neutral-500">
+              Open Source
+            </span>
+            <h2 className="font-display text-4xl lg:text-5xl font-black mt-2">
+              USE THE PRIMITIVES
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-ink">
+            {[
+              {
+                name: "@daiwikdomain/parellax-storage",
+                version: "0.1.1",
+                headline: "Decentralized KV for Any App",
+                description:
+                  "Drop-in wrapper for 0G KV Storage. Set per-wallet spending limits and maintain append-only audit logs that no operator can edit. Suitable for any agentic system that needs sovereign user preferences and tamper-proof history.",
+                exports: ["setSpendingLimit", "getSpendingLimit", "appendAuditLog", "getAuditLog"],
+                env: "PRIVATE_KEY",
+              },
+              {
+                name: "@daiwikdomain/parellax-compute",
+                version: "0.1.1",
+                headline: "TEE Inference in One Function",
+                description:
+                  "Single-call wrapper for 0G Compute TEE. Pass a natural-language intent and financial context — get back an approval decision with a cryptographic verification ID and a teeVerified flag confirming sealed enclave execution.",
+                exports: ["evaluateTransaction"],
+                env: "OG_COMPUTE_KEY",
+              },
+            ].map(({ name, version, headline, description, exports: fns, env }, i) => (
+              <div key={name} className={`p-8 ${i === 0 ? "border-b lg:border-b-0 lg:border-r border-ink" : ""}`}>
+                <div className="flex items-start justify-between mb-2">
+                  <span className="font-data text-xs text-editorial uppercase tracking-widest">npm</span>
+                  <span className="font-data text-xs text-neutral-500">v{version}</span>
+                </div>
+                <h3 className="font-display text-2xl lg:text-3xl font-bold mb-1 leading-tight">{headline}</h3>
+                <p className="font-data text-xs text-neutral-500 mb-4">{name}</p>
+                <p className="font-body text-sm text-neutral-600 leading-relaxed mb-6">{description}</p>
+
+                <div className="bg-neutral-950 border border-neutral-800 px-4 py-3 font-data text-xs text-neutral-300 mb-4">
+                  npm install {name}
+                </div>
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {fns.map(fn => (
+                    <span key={fn} className="border border-ink px-2 py-1 font-data text-xs text-neutral-500">
+                      {fn}()
+                    </span>
+                  ))}
+                </div>
+
+                <div className="font-data text-xs text-neutral-600">
+                  Requires <span className="text-neutral-400">{env}</span> env var
+                </div>
               </div>
             ))}
           </div>
@@ -394,7 +513,7 @@ export default function Landing() {
                 Built With
               </span>
               <ul className="space-y-2">
-                {["0G Storage", "0G Compute", "0G Chain", "Llama 3.3 70B"].map((item) => (
+                {["0G Storage", "0G Compute", "0G Chain", "Qwen 2.5 7B"].map((item) => (
                   <li key={item} className="font-sans text-sm text-neutral-600">
                     {item}
                   </li>
@@ -407,10 +526,12 @@ export default function Landing() {
                 Technical
               </span>
               <div className="space-y-1 font-data text-xs text-neutral-500">
-                <div>Chain ID: 16602</div>
-                <div>Network: Galileo Testnet</div>
-                <div>Solidity: 0.8.28 (cancun)</div>
+                <div>Chain ID: 16602 — Galileo Testnet</div>
+                <div>Solidity: 0.8.28 (cancun · viaIR)</div>
                 <div>SDK: @0gfoundation/0g-ts-sdk@1.2.6</div>
+                <div className="pt-2 text-neutral-600">npm packages</div>
+                <div>@daiwikdomain/parellax-storage</div>
+                <div>@daiwikdomain/parellax-compute</div>
               </div>
             </div>
           </div>
