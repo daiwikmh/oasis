@@ -1,6 +1,6 @@
 {
   "name": "@daiwikdomain/parellax-storage",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "0G KV Storage wrapper — spending limits and audit logs for agentic banking",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
