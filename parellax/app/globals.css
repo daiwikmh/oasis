@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #F9F9F7;
+  --color-ink: #111111;
+  --color-editorial: #CC0000;
+  --color-muted: #E5E5E0;
+
+  --font-display: "Times New Roman", Georgia, serif;
+  --font-body: Georgia, "Times New Roman", serif;
+  --font-sans: "Helvetica Neue", Arial, sans-serif;
+  --font-data: "Courier New", Courier, monospace;
+  --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, monospace;
+}
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #e4e4e7;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
+.sharp {
+  border-radius: 0 !important;
+}
+
+.newsprint-texture {
+  position: relative;
+}
+.newsprint-texture::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(0deg, transparent 98%, rgba(0, 0, 0, 0.02) 100%),
+    linear-gradient(90deg, transparent 98%, rgba(0, 0, 0, 0.02) 100%);
+  background-size: 3px 3px;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.hard-shadow-hover {
+  transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
+}
+.hard-shadow-hover:hover {
+  box-shadow: 4px 4px 0px 0px #111111;
+  transform: translate(-2px, -2px);
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee 40s linear infinite;
+  display: flex;
+  width: max-content;
+}
