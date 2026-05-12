@@ -1,1 +1,30 @@
 node_modules/
+.next/
+out/
+build/
+dist/
+
+# env files — never commit real secrets
+.env
+.env.local
+.env.*.local
+*.env
+*.env.local
+.env.local.bak
+*.bak
+
+# logs
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# build artifacts
+*.tsbuildinfo
+next-env.d.ts
+.vercel/
+.expo/

@@ -1,0 +1,11 @@
+import type { NextConfig } from "next";
+
+const config: NextConfig = {
+  reactStrictMode: true,
+  webpack: (cfg) => {
+    cfg.resolve.fallback = { ...cfg.resolve.fallback, fs: false };
+    return cfg;
+  },
+};
+
+export default config;
