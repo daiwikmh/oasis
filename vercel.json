@@ -1,7 +1,0 @@
-{
-  "framework": "nextjs",
-  "buildCommand": "cd oasis && npm run build",
-  "installCommand": "cd oasis && npm install --legacy-peer-deps",
-  "devCommand": "cd oasis && npm run dev",
-  "outputDirectory": "oasis/.next"
-}
