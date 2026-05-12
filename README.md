@@ -1,236 +1,78 @@
 # Oasis
 
-A non-custodial web wallet and finance platform built on **Palm USD (PUSD)** — a 6-decimal, non-freezable stablecoin native to Solana, Ethereum, BNB, TRON, and ADI. v1 ships Solana-only.
+> Stablecoin banking for people. Payroll for businesses. Built on Palm USD.
 
-> Self-custody. No volatility. Every transaction is final.
+**Live app → [oasis-pusd.vercel.app](https://oasis-pusd.vercel.app)**
+
+![Status](https://img.shields.io/badge/v1-Solana%20only-orange)
+![Chain](https://img.shields.io/badge/Solana-mainnet-14F195)
+![Token](https://img.shields.io/badge/Palm%20USD-PUSD-C8F560)
+![Frontend](https://img.shields.io/badge/Next.js-15-black)
+![Custody](https://img.shields.io/badge/non--custodial-yes-success)
+
+**Oasis is a non-custodial wallet and finance app built on Palm USD (PUSD) — a dollar-pegged stablecoin on Solana.** Hold, send, swap, earn, and spend dollars without the volatility, without a custodian, without a seed phrase. You sign in with email; an embedded Solana wallet is created that only you control. Transfers settle in under a second for a fraction of a cent, and they're final the moment they confirm.
 
 ---
 
-## What it is
+## The problem
 
-Oasis lets individuals and businesses hold, send, swap, earn, and spend PUSD from a single web app. There is no centralized custody, no admin freeze key, and no blacklist — users own their keys via Privy's embedded wallet.
+Stablecoins settled more value last year than Visa — yet almost none of it reached **payroll**, the highest-trust, highest-frequency money movement in any business. International contractor payroll still takes three to five days, leaks 3–7% to fees and FX spread, and the person waiting has no idea when it lands.
 
-The primary B2B differentiator is the **Payroll** module: bulk PUSD disbursements to up to 100 employees, CSV-importable, with recurring schedule support. Everything else (wallet, swaps, analytics, transparency) supports the individual use case.
+The reason isn't the rails — it's that no product makes the *full loop* usable: a company funds a wallet, runs a batch, and the employee actually **receives and spends** it. Oasis is that loop.
 
 ---
 
-## Tech stack
+## How it works
 
-| Layer | Choice |
+```mermaid
+flowchart LR
+    B1[Business] -->|CSV import| B2[Payroll batch in PUSD]
+    B2 -->|payout| W
+    U1[Anyone] -->|email sign-in| W
+    W(("Oasis wallet<br/>self-custody"))
+    W --> S[Send / Receive]
+    W --> X[Swap PUSD &harr; USDC]
+    W --> C[Spend &middot; Bitrefill]
+    W --> T[Earning &amp; spending stats]
+```
+
+Sell payroll to the employer — and every employee becomes a user of the wallet, swaps, stats, and spending around it. That's the flywheel.
+
+---
+
+## What's inside
+
+| Module | What it does |
 |---|---|
-| Frontend | Next.js 15 (App Router) + Tailwind v3 + shadcn/ui |
-| Auth | Privy web SDK — email OTP + embedded Solana wallet |
-| Chain | Solana via @solana/web3.js + @solana/spl-token |
-| Swaps | Jupiter v6 API |
-| State | TanStack Query (chain reads) + Zustand (UI state) |
-| Backend | Hono on Bun + Postgres (Neon) + Drizzle ORM on Railway |
-| Hosting | Vercel (web) + Railway (API) |
+| **Wallet** | Live PUSD balance, one-tap send and receive, transaction history. Email sign-in, embedded self-custody wallet, sub-second settlement. |
+| **Payroll** | The B2B wedge. Create a batch, import up to 100 people from CSV, set a recurring cadence, pay the whole team in PUSD — instant, near-free, transparent. |
+| **Swaps** | PUSD &harr; USDC routed through Jupiter for best execution, with price-impact protection. A MoonPay path lets anyone buy in with a card. |
+| **Statistics** | Earning and spending bucketed by day, week, month, year — the income dashboard a bank app gives you and most wallets don't. |
+| **Commerce** | A built-in Bitrefill catalog: gift cards, mobile top-ups, eSIMs, bill pay across 200+ countries. The dollars you earn don't have to leave the ecosystem to be useful. |
+| **Transparency** | Live PUSD circulating supply by chain, pulled from Palm's public API. Verify the float yourself. |
 
 ---
 
-## Features
+## Why PUSD
 
-### Wallet
-The home screen. Shows live PUSD balance, quick-action Send/Receive buttons, and the last 5 transactions. Full transaction history is linked to Statistics.
-
-### Send
-Modal-driven send flow. Accepts a Solana wallet address and PUSD amount. Builds and signs an SPL token transfer via the embedded Privy wallet. All amounts are represented as `bigint` (6 decimals) internally and formatted only at render.
-
-### Receive
-Generates a QR code of the user's embedded wallet address for peer-to-peer PUSD receipt.
-
-### Statistics
-Earning and spending analytics with period filters: Today, Weekly, Monthly, Yearly. Rendered as a dual-bar Recharts chart (lime = earned, dark = spent). Reads from on-chain transaction history.
-
-### Swaps
-PUSD ↔ USDC swaps via Jupiter v6. Features:
-- Configurable slippage (0.1% / 0.5% / 1%)
-- Real-time price impact with blocking at >3%
-- Best-route display
-- Solscan transaction link after confirmation
-- MoonPay CTA for users who need to buy USDC with a card first
-
-### Payroll
-Bulk PUSD payouts for businesses. Features:
-- Named batches with up to 100 employee recipients
-- CSV import for recipient lists
-- Recurring frequency support (weekly, biweekly, monthly)
-- Month-to-date spend summary dashboard
-- One wallet signature per recipient disbursement
-
-### Transparency
-Live PUSD circulating supply pulled from Palm's public API (`palmusd.com/api/v1/circulation` + `/circulation/history`). Displays:
-- Total circulating supply by chain (Ethereum, Solana, BSC, ADI)
-- Historical supply area chart
-- Link out to palmusd.com for proof-of-reserves attestations
-
-### Commerce (stub)
-Bitrefill product catalog — browse gift cards, mobile refills, eSIMs, and bill payments. Bitrefill does not accept PUSD; the page surfaces a swap-to-USDC banner. No in-app checkout — clicks open bitrefill.com.
-
-### Shopping / Gift Cards
-v1 shells, deferred to v2.
+Palm USD is a 6-decimal dollar stablecoin with **no admin key, no blacklist, no pause function**. Every transfer is final the moment it confirms — there's nothing to freeze and no one to ask. If your code works with USDC, it works with PUSD; there's no SDK to integrate.
 
 ---
 
-## Flow diagrams
+## Design
 
-### Auth & onboarding
-
-```mermaid
-flowchart TD
-    A[Landing page] --> B{First visit?}
-    B -- yes --> C[Onboarding slides\n3-step carousel]
-    B -- no --> E
-    C --> D[Get started]
-    D --> E[Login — email OTP via Privy]
-    E --> F{Wallet exists?}
-    F -- yes --> G[Dashboard]
-    F -- no --> H[Privy creates embedded\nSolana wallet]
-    H --> G
-```
-
-### Send PUSD
-
-```mermaid
-flowchart TD
-    A[Dashboard] --> B[Tap Send]
-    B --> C[Enter recipient address\n+ amount]
-    C --> D{Valid address\n& balance?}
-    D -- no --> C
-    D -- yes --> E[Build SPL transfer\ntransaction]
-    E --> F[Privy signs with\nembedded wallet]
-    F --> G[Broadcast to Solana\nvia Helius RPC]
-    G --> H{Confirmed?}
-    H -- yes --> I[Show Solscan link\nUpdate balance]
-    H -- no --> J[Surface error via toast]
-```
-
-### Receive PUSD
-
-```mermaid
-flowchart TD
-    A[Dashboard] --> B[Tap Receive]
-    B --> C[Display QR code\nof embedded wallet address]
-    C --> D[Sender scans / copies address]
-    D --> E[Sender initiates transfer\nin their wallet]
-    E --> F[PUSD arrives on Solana]
-    F --> G[Balance updates on next\nTanStack Query refetch]
-```
-
-### Swap PUSD ↔ USDC
-
-```mermaid
-flowchart TD
-    A[Swap page] --> B[Select input token\n& output token]
-    B --> C[Enter amount]
-    C --> D[Jupiter v6 quote\nfetched in real time]
-    D --> E{Price impact?}
-    E -- ">3%" --> F[Swap blocked\nShow warning]
-    E -- "1–3%" --> G[Show warning\nAllow swap]
-    E -- "<1%" --> H[Show quote details]
-    G --> I[User confirms]
-    H --> I
-    I --> J[Jupiter builds\nswap transaction]
-    J --> K[Privy signs]
-    K --> L[Broadcast via Helius]
-    L --> M[Solscan confirmation link]
-```
-
-### Fiat onramp (MoonPay path)
-
-```mermaid
-flowchart TD
-    A[User has no PUSD or USDC] --> B[Tap Buy USDC on Swap page]
-    B --> C[Opens MoonPay in new tab\ndefaultCurrencyCode=usdc_sol]
-    C --> D[User buys USDC with card\non MoonPay]
-    D --> E[USDC delivered to\nembedded wallet address]
-    E --> F[Return to Oasis Swap page]
-    F --> G[Swap USDC → PUSD\nvia Jupiter]
-```
-
-### Payroll batch
-
-```mermaid
-flowchart TD
-    A[Payroll dashboard] --> B[New batch]
-    B --> C[Name batch\n+ set frequency]
-    C --> D{Add employees}
-    D -- manual --> E[Enter name\nwallet + amount]
-    D -- CSV --> F[Upload CSV\nparse up to 100 rows]
-    E --> G[Review batch summary]
-    F --> G
-    G --> H[Confirm & disburse]
-    H --> I[For each recipient:\nbuild SPL transfer]
-    I --> J[Privy signs each tx]
-    J --> K[Broadcast to Solana]
-    K --> L[Batch recorded\nMonth-to-date stats updated]
-```
-
-### Transparency / Reserves
-
-```mermaid
-flowchart TD
-    A[User visits /reserves] --> B[Next.js route handler\n/api/palm/circulation]
-    B --> C[Fetches palmusd.com/api/v1/circulation\nserver-side to avoid CORS]
-    C --> D[Fetches /circulation/history]
-    D --> E[Returns combined payload\nto client]
-    E --> F[Display total supply\nby chain breakdown]
-    F --> G[Render supply\nhistory area chart]
-    G --> H[Link out to palmusd.com\nfor proof-of-reserves PDF]
-```
+Lime-green, cream, near-black — a fintech aesthetic that deliberately doesn't look like crypto. The product a normal person and a payroll manager both feel comfortable opening.
 
 ---
 
-## PUSD token addresses
+## Status
 
-| Chain | Address |
-|---|---|
-| Ethereum | `0xfaf0cee6b20e2aaa4b80748a6af4cd89609a3d78` |
-| Solana | see `lib/tokens/pusd.ts` |
-| BNB / TRON / ADI | see `lib/tokens/pusd.ts` |
-
-Decimals: **6** on all chains.
-
-PUSD has no admin key, no freeze function, and no blacklist. All transfers are final once confirmed.
+**v1 is Solana-only and web-first.** Live today: Wallet, Payroll, Swaps, Statistics, Commerce, Transparency. Gift Cards and Shopping are stubs on the roadmap. PUSD is native on five chains; multi-chain support is post-v1.
 
 ---
 
-## Project structure
+## Links
 
-```
-oasis/
-  app/
-    (auth)/         login, onboarding
-    (app)/          dashboard, stats, swap, payroll, commerce, profile
-    reserves/       transparency screen
-    api/            server route handlers (palm proxy, payroll, etc.)
-  components/
-    ui/             shadcn primitives
-    wallet/         BalanceCard, QuickActions, SendDialog, ReceiveDialog, TxRow
-    nav/            Sidebar, TopBar
-  hooks/            TanStack Query hooks (chain reads only)
-  lib/
-    solana/         jupiter.ts, transfer.ts
-    tokens/         pusd.ts (addresses + formatPusd)
-  stores/           Zustand slices (UI/draft state only)
-  theme/            design tokens
-oasis-backend/      Hono + Bun API service (separate Railway deploy)
-```
-
----
-
-## Running locally
-
-```bash
-cd oasis
-cp .env.example .env.local   # fill in Privy app ID, Helius RPC, Bitrefill key
-npm install
-npm run dev                   # http://localhost:3000
-```
-
-Backend:
-```bash
-cd oasis-backend
-bun install
-bun dev                       # http://localhost:3001
-```
+- Live app — [oasis-pusd.vercel.app](https://oasis-pusd.vercel.app)
+- Palm USD — [palmusd.com](https://www.palmusd.com)
+- Circulation API — `https://www.palmusd.com/api/v1/circulation`
